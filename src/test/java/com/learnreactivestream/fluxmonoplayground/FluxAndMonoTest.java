@@ -28,4 +28,15 @@ public class FluxAndMonoTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    public void fluxTestWithError() {
+        Flux<String> stringFlux = Flux.just("Spring", "Java")
+                .concatWith(Flux.error(new RuntimeException("Error occured")))
+                .log();
+        StepVerifier.create(stringFlux)
+                .expectNext("Spring", "Java")
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }
